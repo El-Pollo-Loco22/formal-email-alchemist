@@ -3,114 +3,72 @@
 const informalInput = document.getElementById('informal-input'); // The box for raw materials
 const formalOutput = document.getElementById('formal-output');   // The box for the refined product
 const transmuteButton = document.getElementById('transmute-button'); // The catalyst trigger
+const originalButtonText = transmuteButton.textContent; // Store original button text
 
-// === The Core Transmutation Spell ===
-// This function holds the secret formula for converting informal to formal.
-// For now, it uses simple rules (Lesser Incantations). True AI is a Greater Summoning!
-function transmuteToFormal(text) {
-    let formalText = text; // Start with the original text
+// === The NEW Catalyst Rune (Event Listener) ===
+// This function now calls our Netlify serverless function
+transmuteButton.addEventListener('click', async () => { // Make the listener async
+  const informalText = informalInput.value.trim();
 
-    // --- 1. Simple Replacements (Word Transmutation) ---
-    // A dictionary of common informal words and their formal counterparts.
-    const replacements = {
-        "u": "you",
-        "r": "are",
-        "ur": "your", // Added common one
-        "k": "okay", // Added common one
-        "im": "I am", // Handle cases like "im hungry"
-        "i'm": "I am",
-        "i'll": "I will",
-        "i'd": "I would", // Added common one
-        "wasnt": "was not", // Added common one
-        "werent": "were not", // Added common one
-        "dont": "do not", // Added common one
-        "doesnt": "does not", // Added common one
-        "cant": "cannot", // Added common one
-        "pls": "please",
-        "plz": "please",
-        "thx": "thank you",
-        "tnx": "thank you",
-        "asap": "as soon as possible",
-        "idk": "I do not know",
-        "btw": "by the way", // Added common one
-        "fyi": "for your information", // Added common one
-        "lol": "", // Often removed in formal text
-        "haha": "", // Often removed in formal text
-        "gonna": "going to",
-        "wanna": "want to",
-        "gotta": "got to",
-        "hey": "Hello", // Basic greeting swap
-        "yo ": "Hello ", // Note the space
-        "sup": "How are you",
-        "cya": "See you later",
-        // --- Add many more rules here as needed! ---
-    };
+  if (!informalText) {
+    formalOutput.value = "Please enter some text into the 'Informal Text' box first.";
+    return;
+  }
 
-    // Apply replacements using Regular Expressions for whole words
-    // \b ensures we match whole words only (e.g., 'r' doesn't match 'are')
-    // 'gi' flags mean global (replace all occurrences) and case-insensitive
-    for (const informal in replacements) {
-        const regex = new RegExp(`\\b${informal}\\b`, 'gi');
-        formalText = formalText.replace(regex, replacements[informal]);
-    }
+  // --- UI Feedback: Indicate Loading ---
+  transmuteButton.disabled = true;
+  transmuteButton.textContent = 'Consulting Oracle...';
+  formalOutput.value = 'The Oracle is contemplating... please wait.';
+  formalOutput.style.color = '#555'; // Dim text during loading
 
-    // --- 2. Structural Glyphs (Email Format) ---
-    // Attempt to add basic email structure if missing.
+  try {
+    // --- Call the Serverless Function ---
+    // Use the relative path provided by Netlify for functions
+    const functionUrl = '/.netlify/functions/generate-email';
 
-    // Ensure first letter is capitalized
-    formalText = formalText.trim(); // Remove leading/trailing whitespace first
-    if (formalText.length > 0) {
-     formalText = formalText.charAt(0).toUpperCase() + formalText.slice(1);
-    }
-
-    // Add a generic opening if one isn't apparent
-    // Uses regex: ^ means start of string, i means case-insensitive
-    if (!/^(Dear|Hello|Hi |Greetings)/i.test(formalText)) {
-        formalText = "Dear [Recipient Name],\n\n" + formalText;
-    }
-
-    // Add a generic polite closing if one isn't detected
-    // Uses regex: $ means end of string (before potential trailing whitespace)
-    if (!/(Sincerely|Best regards|Kind regards|Thank you|Thanks)[,.!?]?\s*$/i.test(formalText)) {
-         // Add a period if the last real character isn't punctuation
-         if (formalText.length > 0 && !/[.!?]$/.test(formalText.trim())) {
-             formalText = formalText.trim() + ".";
-         }
-         formalText += "\n\nBest regards,\n[Your Name]"; // Add closing block
-    }
-
-    // --- 3. Refinement Runes (Minor Fixes) ---
-    // Example: Try to ensure sentences after periods start with a capital letter.
-    // This is basic and won't catch all edge cases.
-    formalText = formalText.replace(/([.?!])\s+([a-z])/g, (match, punctuation, letter) => {
-        return `${punctuation} ${letter.toUpperCase()}`;
+    const response = await fetch(functionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Send the text in the expected JSON format { "text": "..." }
+      body: JSON.stringify({ text: informalText }),
     });
 
-    // Remove potential double spacing introduced by replacements
-    formalText = formalText.replace(/ {2,}/g, ' ');
-    formalText = formalText.replace(/\n /g, '\n'); // Fix space after newline
-
-    return formalText; // Return the transmuted text!
-}
-
-// === The Catalyst Rune (Event Listener) ===
-// This tells the button to perform the transmutation spell when clicked.
-transmuteButton.addEventListener('click', () => {
-    // 1. Get the raw text from the input box
-    const informalText = informalInput.value;
-
-    // 2. Check if there's actually text to transmute
-    if (!informalText.trim()) {
-        formalOutput.value = "Please enter some text into the 'Informal Text' box first.";
-        return; // Stop if nothing was entered
+    // --- Process the Response ---
+    if (!response.ok) {
+      // Try to get error details from the function's response body
+      let errorMsg = `Oracle responded with status: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMsg += ` - ${errorData.error || 'Unknown error'}`;
+      } catch (e) {
+        // Could not parse JSON error body
+        errorMsg += ` - Could not parse error details.`;
+      }
+      throw new Error(errorMsg); // Throw an error to be caught below
     }
 
-    // 3. Perform the transmutation using our spell function
-    const formalText = transmuteToFormal(informalText);
+    // If response is OK (status 200-299)
+    const data = await response.json();
+    const professionalEmail = data.professionalEmail; // Expecting { "professionalEmail": "..." }
 
-    // 4. Display the refined result in the output box
-    formalOutput.value = formalText;
+    // Display the result
+    formalOutput.value = professionalEmail;
+    formalOutput.style.color = '#333'; // Restore normal text color
+
+  } catch (error) {
+    // --- Handle Errors (Network or thrown above) ---
+    console.error('Error during transmutation:', error);
+    formalOutput.value = `An error occurred: ${error.message}\n\nPlease check the console or try again later. Ensure the API key is configured correctly in Netlify.`;
+    formalOutput.style.color = 'red'; // Make errors stand out
+  } finally {
+    // --- UI Feedback: Reset Button ---
+    // This runs whether the try block succeeded or failed
+    transmuteButton.disabled = false;
+    transmuteButton.textContent = originalButtonText; // Restore original text
+  }
 });
 
-// --- Initial message on load (Optional) ---
-formalOutput.value = "The refined message will appear here once you enter text above and click 'Transmute!'"; 
+// --- Initial message on load ---
+formalOutput.value = "Enter text above, then click 'Transmute!' to consult the AI Oracle."; 
