@@ -1,0 +1,61 @@
+body {
+    font-family: sans-serif; /* A common, readable font */
+    line-height: 1.6;
+    background-color: #f4f4f4; /* Light gray ethereal background */
+    color: #333; /* Dark gray text, like ancient ink */
+    padding: 20px; /* Breathing room around the edges */
+}
+
+.container {
+    background-color: #fff; /* White container, like pristine parchment */
+    padding: 30px; /* Inner spacing */
+    border-radius: 8px; /* Slightly rounded corners, less harsh */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* A subtle shadow, giving depth */
+    max-width: 600px; /* Limit width for comfortable reading */
+    margin: 20px auto; /* Center the container horizontally */
+}
+
+h1 {
+    text-align: center; /* Center the main title */
+    color: #2c3e50; /* A darker, sophisticated blue, like twilight sky */
+}
+
+label {
+    display: block; /* Put labels nicely above their fields */
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold; /* Make labels stand out */
+}
+
+textarea {
+    width: 100%; /* Make text areas fill their container */
+    padding: 10px; /* Space inside the text areas */
+    border: 1px solid #ccc; /* A simple border */
+    border-radius: 4px; /* Slightly rounded corners for the boxes */
+    box-sizing: border-box; /* Ensure padding/border don't add to the width */
+    margin-bottom: 15px; /* Space below text areas */
+    font-family: inherit; /* Use the same font as the body */
+}
+
+button {
+    display: block; /* Put the button on its own line */
+    width: 100%; /* Make button fill container width */
+    padding: 12px; /* Generous padding for easy clicking */
+    background-color: #3498db; /* A pleasant blue, the colour of possibility */
+    color: white; /* White text on the button */
+    border: none; /* No default border */
+    border-radius: 4px; /* Slightly rounded corners */
+    font-size: 1em; /* Standard font size */
+    cursor: pointer; /* Change cursor to a hand on hover */
+    margin-bottom: 20px; /* Space below the button */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+button:hover {
+    background-color: #2980b9; /* Darker blue when hovered, showing reactivity */
+}
+
+#formal-output {
+    background-color: #e9e9e9; /* Slightly different background for the output */
+    /* Inherits other textarea styles */
+} 
