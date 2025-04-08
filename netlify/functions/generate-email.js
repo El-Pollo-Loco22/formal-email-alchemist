@@ -45,7 +45,7 @@ exports.handler = async (event, context) => {
   const prompt = `Please rewrite the following text into a professional email. Ensure it has a clear subject line (on the first line, starting with "Subject: "), an appropriate greeting, a well-structured body based on the input text, and a professional closing. Input Text: "${inputText}"`;
 
   // 5. Prepare the request to the Google Gemini API
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
   const requestBody = {
     contents: [{
       parts: [{
