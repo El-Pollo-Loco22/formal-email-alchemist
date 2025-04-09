@@ -50,28 +50,29 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #555; /* Adjust color as needed */
-    flex-grow: 1; /* Take up space if chat is empty */
-    padding-bottom: 50px; /* Add some padding at the bottom */
+    color: #555;
+    flex-grow: 1; /* Allow it to take up vertical space */
+    height: 100%; /* Explicitly set height for centering */
+    padding-bottom: 50px; /* Keep some padding */
 }
 
 .translate-icon {
-    width: 40px; /* Adjust size */
-    height: 40px;
-    margin-bottom: 10px;
-    opacity: 0.8; /* Slightly fade icon */
+    width: 45px; /* Slightly larger icon */
+    height: 45px;
+    margin-bottom: 12px;
+    opacity: 0.7; /* Adjust opacity */
 }
 
 .placeholder-text-large {
-    font-size: 1.1em;
-    font-weight: 500;
-    margin: 0 0 5px 0;
+    font-size: 1.2em; /* Larger 'Transmute' text */
+    font-weight: 600; /* Bolder */
+    margin: 0 0 8px 0;
 }
 
 .placeholder-text-small {
-    font-size: 0.9em;
-    line-height: 1.4;
-    color: #777;
+    font-size: 1em; /* Larger secondary text */
+    line-height: 1.5;
+    color: #666;
     margin: 0;
 }
 
@@ -380,4 +381,20 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Adjust Input Area for Mobile if needed */
+.input-area {
+    /* padding: 12px 15px; */ /* Slightly adjust padding? */
+}
+
+#informal-input {
+    /* font-size: 1em; */ /* Adjust base font size? */
+}
+
+#transmute-button {
+    /* Adjust size/icon size? */
+    /* width: 42px; */
+    /* height: 42px; */
+    /* font-size: 1.4em; */
 } 
