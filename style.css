@@ -1,61 +1,383 @@
 body {
-    font-family: sans-serif; /* A common, readable font */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4; /* Light gray ethereal background */
-    color: #333; /* Dark gray text, like ancient ink */
-    padding: 20px; /* Breathing room around the edges */
+    background-color: #ffffff; /* White background like the image */
+    color: #333;
+    margin: 0; /* Remove default body margin */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure body takes full height */
 }
 
-.container {
-    background-color: #fff; /* White container, like pristine parchment */
-    padding: 30px; /* Inner spacing */
-    border-radius: 8px; /* Slightly rounded corners, less harsh */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* A subtle shadow, giving depth */
-    max-width: 600px; /* Limit width for comfortable reading */
-    margin: 20px auto; /* Center the container horizontally */
+/* Remove or comment out old conflicting styles */
+/* .container { ... } */
+/* h1 { ... } */
+/* label { ... } */
+/* textarea { ... } */
+/* button { ... } */ /* Remove old button styles */
+/* button:hover { ... } */
+/* #formal-output { ... } */
+
+/* --- Chat UI Styles --- */
+
+.chat-container {
+    width: 100%;
+    max-width: 500px; /* Limit chat width */
+    height: 80vh; /* Set a fixed height */
+    max-height: 700px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent content spill */
 }
 
-h1 {
-    text-align: center; /* Center the main title */
-    color: #2c3e50; /* A darker, sophisticated blue, like twilight sky */
+#chat-output {
+    flex-grow: 1; /* Takes available vertical space */
+    padding: 20px 20px 10px 20px;
+    overflow-y: auto; /* Enable scrolling for messages */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-label {
-    display: block; /* Put labels nicely above their fields */
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-weight: bold; /* Make labels stand out */
+/* Placeholder Styles */
+.chat-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #555; /* Adjust color as needed */
+    flex-grow: 1; /* Take up space if chat is empty */
+    padding-bottom: 50px; /* Add some padding at the bottom */
 }
 
-textarea {
-    width: 100%; /* Make text areas fill their container */
-    padding: 10px; /* Space inside the text areas */
-    border: 1px solid #ccc; /* A simple border */
-    border-radius: 4px; /* Slightly rounded corners for the boxes */
-    box-sizing: border-box; /* Ensure padding/border don't add to the width */
-    margin-bottom: 15px; /* Space below text areas */
-    font-family: inherit; /* Use the same font as the body */
+.translate-icon {
+    width: 40px; /* Adjust size */
+    height: 40px;
+    margin-bottom: 10px;
+    opacity: 0.8; /* Slightly fade icon */
 }
 
-button {
-    display: block; /* Put the button on its own line */
-    width: 100%; /* Make button fill container width */
-    padding: 12px; /* Generous padding for easy clicking */
-    background-color: #3498db; /* A pleasant blue, the colour of possibility */
-    color: white; /* White text on the button */
-    border: none; /* No default border */
-    border-radius: 4px; /* Slightly rounded corners */
-    font-size: 1em; /* Standard font size */
-    cursor: pointer; /* Change cursor to a hand on hover */
-    margin-bottom: 20px; /* Space below the button */
-    transition: background-color 0.3s ease; /* Smooth hover effect */
+.placeholder-text-large {
+    font-size: 1.1em;
+    font-weight: 500;
+    margin: 0 0 5px 0;
 }
 
-button:hover {
-    background-color: #2980b9; /* Darker blue when hovered, showing reactivity */
+.placeholder-text-small {
+    font-size: 0.9em;
+    line-height: 1.4;
+    color: #777;
+    margin: 0;
 }
 
-#formal-output {
-    background-color: #e9e9e9; /* Slightly different background for the output */
-    /* Inherits other textarea styles */
+/* In-App Preloader Positioning */
+.preloader {
+    display: flex; /* Use flexbox */
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0; /* Less padding */
+    flex-direction: column;
+    gap: 8px;
+}
+
+.spinner {
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border-left-color: #2ecc71; /* Green spinner accent */
+    animation: spin 1s ease infinite;
+}
+
+.preloader span {
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* Message Bubble Styles */
+.message {
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: 75%;
+    word-wrap: break-word;
+    line-height: 1.4;
+    font-size: 0.95em;
+    animation: fadeIn 0.5s ease-out forwards; /* Add fade-in animation */
+}
+
+.message.user {
+    background-color: #e9e9eb; /* Light gray for user input display */
+    color: #000;
+    align-self: flex-start; /* Align user messages to the left */
+    border-bottom-left-radius: 4px; /* Slightly different rounding */
+}
+
+.message.alchemist {
+    background-color: #f0f0f0; /* Slightly different gray for AI response */
+    color: #000;
+    align-self: flex-start; /* Also align AI to left for now, can change */
+    border-bottom-left-radius: 4px;
+    white-space: pre-wrap; /* Preserve whitespace/newlines from AI */
+}
+
+/* Input Area Styles */
+.input-area {
+    display: flex;
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+    background-color: #fff;
+    gap: 10px;
+    align-items: center;
+}
+
+#informal-input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #dcdcdc;
+    border-radius: 20px; /* Rounded input */
+    font-size: 0.95em;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+#informal-input:focus {
+    border-color: #2ecc71; /* Green border on focus */
+}
+
+#transmute-button {
+    background-color: #2ecc71; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Circular button */
+    width: 40px; 
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
+    font-size: 1.3em; /* Adjust icon size */
+}
+
+#transmute-button:hover {
+    background-color: #27ae60; /* Darker green on hover */
+    transform: scale(1.05); /* Add scaling effect */
+}
+
+#transmute-button:disabled {
+    background-color: #95a5a6; /* Gray when disabled */
+    cursor: not-allowed;
+}
+
+#transmute-button span {
+    line-height: 1; /* Center icon vertically */
+    display: block;
+    margin-left: 2px; /* Slight nudge for centering */
+}
+
+
+/* --- Page Preloader Styles (Keep these) --- */
+#page-preloader {
+    position: fixed; /* Cover the entire viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #2c3e50; /* Dark background, similar to body text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above everything else */
+    transition: opacity 0.75s ease-out; /* Fade out effect */
+    opacity: 1;
+}
+
+.alchemy-loader {
+    /* Style the container for the icon if needed */
+    /* Example: Add a border or background */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 5px solid #2ecc71;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+    animation: pulse-glow 2s ease-in-out infinite; /* Apply new animation */
+}
+
+.flask-icon {
+    width: 80px;  /* Adjust size as needed */
+    height: 80px; /* Adjust size as needed */
+    background-image: url('Images/majesticons_flask.png'); /* Use correct path */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* Optional: Add animation like pulsing or subtle rotation */
+    /* animation: pulse 1.5s ease-in-out infinite; */ /* Can remove if loader pulses */
+}
+
+/* Keyframes for pulsing glow animation */
+@keyframes pulse-glow {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(46, 204, 113, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+    }
+}
+
+/* --- Main Content Visibility (Keep these) --- */
+#main-content.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#main-content.visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.75s ease-in;
+}
+
+/* Spin Animation (Keep this) */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* --- Responsive Adjustments --- */
+
+@media (min-width: 700px) {
+    body {
+        background-color: #343541; /* Dark background from image */
+        /* Remove centering - handled by main-content */
+        display: block;
+        justify-content: unset;
+        align-items: unset;
+    }
+
+    #main-content {
+        display: flex;
+        flex-direction: column;
+        height: 100vh; /* Make main content take full height */
+        padding: 0; /* Remove padding if any */
+    }
+
+    /* Header Styling */
+    .chat-header {
+        background-color: #444654; /* Header bar color */
+        padding: 10px 20px;
+        color: #ececf1;
+        display: flex;
+        justify-content: center; /* Center the content (the h1) */
+        align-items: center;
+        flex-shrink: 0; /* Prevent header from shrinking */
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        position: relative; /* Needed if we absolute position icons later */
+    }
+
+    .chat-header h1 {
+        font-size: 1.1em;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .header-icons {
+        display: none; /* Hide the placeholder icons for now */
+    }
+
+    .chat-container {
+        max-width: 800px; /* Allow wider container */
+        height: auto;     /* Let content define height */
+        max-height: none; /* Remove max-height */
+        width: 90%; /* Use percentage width */
+        margin: 20px auto; /* Center container horizontally */
+        border-radius: 8px; /* Less rounded corners */
+        box-shadow: none; /* Remove shadow if desired */
+        flex-grow: 1; /* Allow container to grow to fill space */
+        background-color: #ffffff; /* White content area */
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    #chat-output {
+        padding: 30px; /* More padding */
+    }
+
+    /* New Input Area Styles for Desktop */
+    .input-area {
+        padding: 20px 30px; /* Adjust padding */
+        border-top: 1px solid #e0e0e0;
+        background-color: #fff; /* Ensure white background */
+        gap: 15px; /* Adjust gap */
+    }
+
+    #informal-input {
+        border-radius: 6px; /* Rectangular input */
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        font-size: 1em;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    #informal-input:focus {
+        border-color: #5e5ce5; /* Purple focus like image */
+        box-shadow: 0 0 0 2px rgba(94, 92, 229, 0.2);
+    }
+
+    #transmute-button {
+        background-color: #5e5ce5; /* Purple button background */
+        color: white;
+        border-radius: 6px; /* Rectangular button */
+        width: auto; /* Auto width based on content */
+        height: auto; /* Auto height */
+        padding: 10px 12px;
+        font-size: 1em; /* Reset font size */
+    }
+
+    #transmute-button:hover {
+        background-color: #4a48c3; /* Darker purple on hover */
+        transform: scale(1.05); /* Add scaling effect */
+    }
+
+    #transmute-button:disabled {
+        background-color: #999; /* Gray disabled */
+        cursor: not-allowed;
+    }
+
+    #transmute-button span {
+        margin: 0; /* Remove icon margin */
+        font-family: inherit; /* Ensure icon uses a font that supports it */
+        content: "\2191"; /* Up arrow icon like image */
+        display: inline-block;
+        transform: translateY(1px); /* Fine-tune vertical alignment */
+    }
+
+    /* Adjust message appearance if needed */
+    /* .message.user { ... } */
+    /* .message.alchemist { ... } */
+}
+
+/* Keyframes for message fade-in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px); /* Optional: slight upward move */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 } 

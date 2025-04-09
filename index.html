@@ -7,17 +7,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>The Formal Email Alchemist</h1>
-    <p>Enter the rough words, and witness the transmutation!</p>
+    <div id="page-preloader">
+        <div class="alchemy-loader">
+            <div class="flask-icon"></div>
+        </div>
+    </div>
 
-    <div class="container">
-        <label for="informal-input">Informal Text:</label>
-        <textarea id="informal-input" rows="10" placeholder="e.g., hey, can u pls send the report asap? thx"></textarea>
+    <div id="main-content" class="hidden">
+        <header class="chat-header">
+            <h1>Formal Email Alchemist</h1> <!-- Or AI Chat -->
+            <div class="header-icons">
+                <!-- Placeholder for icons like in the image -->
+                <span></span><span></span><span></span> 
+            </div>
+        </header>
+        <div class="chat-container">
+            
+            <div id="chat-output">
+                <!-- Formal email output will appear here as messages -->
+            </div>
 
-        <button id="transmute-button">Transmute!</button>
+            <div id="preloader" class="preloader" style="display: none;"> 
+                <div class="spinner"></div> 
+                <span>Consulting the Oracle...</span> 
+            </div>
 
-        <label for="formal-output">Formal Email Draft:</label>
-        <textarea id="formal-output" rows="10" readonly placeholder="The refined message will appear here..."></textarea>
+            <div class="input-area">
+                <input type="text" id="informal-input" placeholder="Enter informal text...">
+                <button id="transmute-button">
+                    <span>&uarr;</span> <!-- Up Arrow Icon -->
+                </button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
